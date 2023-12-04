@@ -21,6 +21,8 @@ RUN set -ex \
     # Upgrade the package index and install security upgrades
     && apt-get update \
     && apt-get upgrade -y \
+    #Upgrade PIP
+    && pip3 install --upgrade pip \
     # Install dependencies
     && pip3 install -r requirements.txt \
     # Clean up
