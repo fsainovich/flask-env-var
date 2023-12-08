@@ -16,12 +16,19 @@ COPY templates ./templates/
 
 RUN set -ex \
     # Create a non-root user
-    && addgroup -S -g 1001 appgroup \
-    && adduser -S --u 1001 -G appgroup -H appuser \
+    && addgroup --system --gid 1001 appgroup \
+    && adduser --system --uid 1001 --gid 1001 --no-create-home appuser \
+    # Upgrade the package index and install security upgrades
+    && apt-get update \
+    && apt-get upgrade -y \
     #Upgrade PIP
     && pip3 install --upgrade pip \
     # Install dependencies
-    && pip3 install -r requirements.txt 
+    && pip3 install -r requirements.txt \
+    # Clean up
+    && apt-get autoremove -y \
+    && apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 5000
 
